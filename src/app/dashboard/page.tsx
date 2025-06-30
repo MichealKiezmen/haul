@@ -2,11 +2,12 @@
 
 import Header from '@/layout/Header'
 import HeroSection from '@/layout/HeroSection'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { fetchData } from '@/helper/makeRequests'
 import Truck from '@/components/truck/Truck'
 import FilterBar from '@/components/reusables/FilterBar'
 import dynamic from 'next/dynamic'
+
 
 
 const BarChartComponent = dynamic(() => import('@/components/charts/BarChartComponent'), {
@@ -42,6 +43,38 @@ function DashBoard() {
         setLoading(false)
     }
 
+    const getTrucksLiveUpdates = useCallback(() => {
+
+        if(truckData){
+          const currentStatus = ["In Transit", "Idle", "Maintenance"]
+          
+          const copiedTruckData = [...truckData]
+
+          const result = copiedTruckData.map((item) => {
+            const randomNum = Math.round(Math.random() * 2)
+            item.status = currentStatus[randomNum]
+            return item
+          })
+          setTruckData(result)
+
+        }
+    
+    },[truckData])
+
+
+
+    useEffect(() => {
+      const timer = setInterval(() => {
+          getTrucksLiveUpdates()
+      },10000)
+
+      return () => {
+        clearInterval(timer)
+      }
+    },[getTrucksLiveUpdates])
+
+
+
     useEffect(() => {
         if(!filterValue || filterValue === "All"){
             getTrucks()
@@ -56,12 +89,12 @@ function DashBoard() {
       image={`https://res.cloudinary.com/rentdirectcloud/image/upload/v1751113232/haul/cfnoghvmedy0yobdtomb.png`}
        />
 
-       <div className='flex flex-col sm:flex-row sm:space-x-8'>
-          <div className='md:w-2/5 xl:w-[30%]'>
+       <div className='flex flex-col sm:flex-row sm:space-x-6 px-3'>
+          <div className='md:w-[43%] xl:w-[30%]'>
             {truckData.length > 0 && <BarChartComponent data={truckData} />}
           </div>
 
-            <div className='my-14 md:w-3/5 xl:w-[70%]'>
+            <div className='my-14 md:[57%] xl:w-[70%]'>
             <h1 className='font-bold text-center sm:text-left text-3xl'>Truck Inventories</h1>
             <div className='flex flex-col items-center sm:items-start justify-center mt-10'>
                 <FilterBar onChange={handleChange} />

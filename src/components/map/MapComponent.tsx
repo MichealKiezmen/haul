@@ -10,7 +10,6 @@ const MapComponent = ({ truck }: any) => {
     const mapRef = useRef<any>(null)
     const mapContainerRef = useRef<any>(null)
 
-    console.log("bounds", bounds)
 
     const getGEOData = async () => {
         const data = await fetchData('https://raw.githubusercontent.com/MichealKiezmen/US-data/master/us-states.json', true)
@@ -23,7 +22,7 @@ const MapComponent = ({ truck }: any) => {
         }else if(truck?.status === "Idle"){
             return "#e70034"
         }else{
-            return "B6C4CC"
+            return "#B6C4CC"
         }
     }
 
@@ -149,7 +148,7 @@ const MapComponent = ({ truck }: any) => {
             }
         };
         // eslint-disable-next-line
-    }, [statesData, truck?.location?.lat, truck?.location?.lng])
+    }, [statesData, truck?.status, truck?.location?.lat, truck?.location?.lng])
 
     return (
         <div ref={mapContainerRef} className='h-[400px] w-full '></div>

@@ -15,22 +15,21 @@ function BarChartComponent({data}: any) {
   const [reineData, setRefinedData] = useState<DataEntry[]>([])
 
 
-
-
   useEffect(() => {
 
   let idle = 0
   let maintenance= 0
   let transit = 0
-  data.map(({status} : TruckObject) => {
-        if(status === "In Transit"){
-            transit = transit + 1
-        }else if(status === "Idle"){
-            idle = idle + 1
-        }else{
-            maintenance = maintenance + 1
-        }
-  })
+
+    data.map(({status} : TruckObject) => {
+          if(status === "In Transit"){
+              transit = transit + 1
+          }else if(status === "Idle"){
+              idle = idle + 1
+          }else{
+              maintenance = maintenance + 1
+          }
+    })
 
   setRefinedData([
     {name: "Idle", value: idle, color: "#e70034"},
@@ -41,7 +40,7 @@ function BarChartComponent({data}: any) {
   },[data])
 
 
-    const RADIAN = Math.PI / 180;
+  const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -77,8 +76,8 @@ function BarChartComponent({data}: any) {
 
   return (
     <div className="">
-      <div className="flex flex-col items-center justify-center my-6 sm:my-14">
-        <p className="text-xl md:text-2xl font-semibold">Truck Status Visualisation</p>
+      <div className="flex flex-col items-center justify-center my-6 sm:my-14 px-4">
+        <p className="text-xl md:text-2xl font-semibold md:text-center">Truck Status Visualisation</p>
         <p className="">Total Fleet Size: {data.length} Trucks</p>
       </div>
         <div style={{ width: '100%', height: '500px' }}>

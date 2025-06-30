@@ -6,7 +6,7 @@ import Header from '@/layout/Header'
 import HeroSection from '@/layout/HeroSection'
 import { TruckObject } from '@/types/interface'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 
 const MapComponent = dynamic(() => import('@/components/map/MapComponent'), {
@@ -40,9 +40,34 @@ function TruckPage() {
         setLoading(false)
     }
 
+    const getTrucksLiveUpdates = useCallback(() => {
+
+        if(truckData){
+          const currentStatus = ["In Transit", "Idle", "Maintenance"]
+
+          const copiedTruckData = {...truckData}
+          const randomNum = Math.round(Math.random() * 2)
+          copiedTruckData.status = currentStatus[randomNum]
+          setTruckData(copiedTruckData)
+
+        }
+    
+    },[truckData])
+    
+    
+    
+        useEffect(() => {
+          const timer = setInterval(() => {
+              getTrucksLiveUpdates()
+          },10000)
+    
+          return () => {
+            clearInterval(timer)
+          }
+        },[getTrucksLiveUpdates])
+
     useEffect(() => {
         fetchDataByID()
-    
     //eslint-disable-next-line
     },[truckID])
 
